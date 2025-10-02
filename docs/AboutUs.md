@@ -1,66 +1,58 @@
 ---
-layout: page
-title: About Us
+  layout: default.md
+  title: "About Us"
 ---
 
-We are a team based in the [School of Computing, National University of Singapore](https://www.comp.nus.edu.sg).
+# About Us
+
+We are a team based in the [School of Computing, National University of Singapore](http://www.comp.nus.edu.sg).
 
 You can reach us at the email `seer[at]comp.nus.edu.sg`
 
 ## Project team
 
-### John Doe
+### Danton Yap
 
-<img src="images/johndoe.png" width="200px">
+<img src="images/dnt0n.png" width="200px">
+[[github](http://github.com/dnt0n)]
+[[portfolio](team/dnt0n.md)]
 
-[[homepage](http://www.comp.nus.edu.sg/~damithch)]
-[[github](https://github.com/johndoe)]
-[[portfolio](team/johndoe.md)]
+### Chia Sin Jie 
 
-* Role: Project Advisor
+<img src="images/sjc.png" width="200px">
 
-### Jane Doe
-
-<img src="images/johndoe.png" width="200px">
-
-[[github](http://github.com/johndoe)]
-[[portfolio](team/johndoe.md)]
-
-* Role: Team Lead
-* Responsibilities: UI
-
-### Johnny Doe
-
-<img src="images/johndoe.png" width="200px">
-
-[[github](http://github.com/johndoe)] [[portfolio](team/johndoe.md)]
+[[github](http://github.com/sjc)] [[portfolio](team/sjc.md)]
 
 * Role: Developer
 * Responsibilities: Data
 
-### Jean Doe
+### Foo Shao Jun
 
-<img src="images/johndoe.png" width="200px">
+<img src="images/enamourous.png" width="200px">
 
-[[github](http://github.com/johndoe)]
-[[portfolio](team/johndoe.md)]
+[[github](http://github.com/enamourous)]
+[[portfolio](team/enamourous.md)]
 
 * Role: Developer
 * Responsibilities: Dev Ops + Threading
 
-### James Doe
 
-<img src="images/johndoe.png" width="200px">
+### Roshan Kuna
 
-[[github](http://github.com/johndoe)]
-[[portfolio](team/johndoe.md)]
+<img src="images/roshan1572.png" width="200px">
+
+[[github](https://github.com/Roshan1572)]
+[[portfolio](team/roshan1572.md)]
 
 * Role: Developer
 * Responsibilities: UI
 
-### Jianrong
+### Jianrong Gu
 
-<img src="images/johndoe.png" width="200px">
+<img src="images/jianronggu.png" width="200px">
 
-[[github](http://github.com/johndoe)]
-[[portfolio](team/johndoe.md)]
+[[github](http://github.com/jianronggu)]
+[[portfolio](team/jianronggu.md)]
+
+* Role: Developer
+* Responsibilities: UI
