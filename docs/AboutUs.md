@@ -11,6 +11,12 @@ You can reach us at the email `seer[at]comp.nus.edu.sg`
 
 ## Project team
 
+### Danton Yap
+
+<img src="images/dnt0n.png" width="200px">
+[[github](http://github.com/dnt0n)]
+[[portfolio](team/dnt0n.md)]
+
 ### John Doe
 
 <img src="images/johndoe.png" width="200px">
