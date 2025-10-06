@@ -274,27 +274,34 @@ _{Explain here how the data archiving feature will be implemented}_
 
 **Target user profile**:
 
-* has a need to manage a significant number of contacts
+* Must be a NUS CCA Treasurer
 * prefer desktop apps over other types
 * can type fast
 * prefers typing to mouse interactions
 * is reasonably comfortable using CLI apps
+* is in charge of managing multiple member expenses
+* is in charge of handling CCA expenses
 
-**Value proposition**: manage contacts faster than a typical mouse/GUI driven app
+**Value proposition**: Provides treasurers with a fast, command-driven way to track members, attendance, and payments without heavy accounting tools.
 
 
 ### User stories
 
 Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unlikely to have) - `*`
 
-| Priority | As a …​                                    | I want to …​                 | So that I can…​                                                        |
-|----------|--------------------------------------------|------------------------------|------------------------------------------------------------------------|
-| `* * *`  | new user                                   | see usage instructions       | refer to instructions when I forget how to use the App                 |
-| `* * *`  | user                                       | add a new person             |                                                                        |
-| `* * *`  | user                                       | delete a person              | remove entries that I no longer need                                   |
-| `* * *`  | user                                       | find a person by name        | locate details of persons without having to go through the entire list |
-| `* *`    | user                                       | hide private contact details | minimize chance of someone else seeing them by accident                |
-| `*`      | user with many persons in the address book | sort persons by name         | locate a person easily                                                 |
+| Priority | As a …        | I want to …                              | So that I can…                                   |
+|----------|---------------|------------------------------------------|--------------------------------------------------|
+| `* * *`  | CCA Treasurer | add new member details                   | build my membership list                         |
+| `* * *`  | CCA Treasurer | view member details                      | keep track of members                            |
+| `* * *`  | CCA Treasurer | search for members by name or tag        | find records quickly                             |
+| `* * *`  | CCA Treasurer | archive inactive members                 | keep my records clean and uncluttered            |
+| `* * *`  | CCA Treasurer | record payments from members             | know who has paid fees                           |
+| `* * *`  | CCA Treasurer | see the time and date of payments        | track payments chronologically                   |
+| `* * *`  | CCA Treasurer | add expenses for CCA purchases           | streamline bookkeeping and avoid manual tracking |
+| `* * *`  | CCA Treasurer | delete expenses for CCA purchases        | delete unwanted data                             |
+| `* * *`  | CCA Treasurer | sync data automatically when back online | avoid manual backups                             |
+| `* * *`  | CCA Treasurer | delete payment from a member             | delete unintended payment                        |
+
 
 *{More to be added}*
 
@@ -302,14 +309,14 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 (For all use cases below, the **System** is the `AddressBook` and the **Actor** is the `user`, unless specified otherwise)
 
-**Use case: Delete a person**
+**Use case: Add an expense**
 
 **MSS**
 
-1.  User requests to list persons
-2.  AddressBook shows a list of persons
-3.  User requests to delete a specific person in the list
-4.  AddressBook deletes the person
+1.  User requests to list expenses
+2.  Treasura shows a list of expenses
+3.  User requests to add a specific expense into the list
+4.  Treasura adds the expense
 
     Use case ends.
 
@@ -319,11 +326,18 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
   Use case ends.
 
-* 3a. The given index is invalid.
+* 2a. One or more required fields are missing.
 
-    * 3a1. AddressBook shows an error message.
+    * 2a1. AddressBook shows error: Missing required field: <field>.
 
-      Use case resumes at step 2.
+      Use case ends.
+
+* 2b. A student with the same studentID already exists.
+
+    * 2b1. AddressBook shows error: Student with this ID already exists.
+
+      Use case ends.
+
 
 *{More to be added}*
 
@@ -332,13 +346,15 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 1.  Should work on any _mainstream OS_ as long as it has Java `17` or above installed.
 2.  Should be able to hold up to 1000 persons without a noticeable sluggishness in performance for typical usage.
 3.  A user with above average typing speed for regular English text (i.e. not code, not system admin commands) should be able to accomplish most of the tasks faster using commands than using the mouse.
+4.  Maximum 500 students per CCA
 
 *{More to be added}*
 
 ### Glossary
 
 * **Mainstream OS**: Windows, Linux, Unix, MacOS
-* **Private contact detail**: A contact detail that is not meant to be shared with others
+* **Student ID**: A unique ID given to each NUS student
+* **CCA**: A NUS co-curricular activity or club
 
 --------------------------------------------------------------------------------------------------------------------
 

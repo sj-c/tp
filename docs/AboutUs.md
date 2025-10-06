@@ -1,6 +1,6 @@
 ---
-  layout: default.md
-  title: "About Us"
+layout: default.md
+title: "About Us"
 ---
 
 # About Us
@@ -14,8 +14,11 @@ You can reach us at the email `seer[at]comp.nus.edu.sg`
 ### Danton Yap
 
 <img src="images/dnt0n.png" width="200px">
-[[github](http://github.com/dnt0n)]
-[[portfolio](team/dnt0n.md)]
+
+[[github](http://github.com/dnt0n)] [[portfolio](team/dnt0n.md)]
+
+* Role: Developer
+* Responsibilities: Data
 
 ### Chia Sin Jie 
 
