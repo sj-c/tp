@@ -17,6 +17,9 @@ import seedu.address.model.person.Person;
 import seedu.address.model.person.Phone;
 import seedu.address.model.tag.Tag;
 
+import seedu.address.model.payment.Payment;
+import seedu.address.storage.JsonAdaptedPayment;
+
 /**
  * Jackson-friendly version of {@link Person}.
  */
@@ -29,14 +32,18 @@ class JsonAdaptedPerson {
     private final String email;
     private final String address;
     private final List<JsonAdaptedTag> tags = new ArrayList<>();
+    private final List<JsonAdaptedPayment> payments = new ArrayList<>();
 
     /**
      * Constructs a {@code JsonAdaptedPerson} with the given person details.
      */
     @JsonCreator
-    public JsonAdaptedPerson(@JsonProperty("name") String name, @JsonProperty("phone") String phone,
-            @JsonProperty("email") String email, @JsonProperty("address") String address,
-            @JsonProperty("tags") List<JsonAdaptedTag> tags) {
+    public JsonAdaptedPerson(@JsonProperty("name") String name,
+                             @JsonProperty("phone") String phone,
+                             @JsonProperty("email") String email,
+                             @JsonProperty("address") String address,
+                             @JsonProperty("tags") List<JsonAdaptedTag> tags,
+                             @JsonProperty("payments") List<JsonAdaptedPayment> payments) {
         this.name = name;
         this.phone = phone;
         this.email = email;
@@ -44,7 +51,11 @@ class JsonAdaptedPerson {
         if (tags != null) {
             this.tags.addAll(tags);
         }
+        if (payments != null) {
+            this.payments.addAll(payments);
+        }
     }
+
 
     /**
      * Converts a given {@code Person} into this class for Jackson use.
@@ -57,6 +68,10 @@ class JsonAdaptedPerson {
         tags.addAll(source.getTags().stream()
                 .map(JsonAdaptedTag::new)
                 .collect(Collectors.toList()));
+        source.getPayments().stream()
+                .map(JsonAdaptedPayment::new)
+                .forEach(this.payments::add);
+
     }
 
     /**
@@ -103,7 +118,16 @@ class JsonAdaptedPerson {
         final Address modelAddress = new Address(address);
 
         final Set<Tag> modelTags = new HashSet<>(personTags);
-        return new Person(modelName, modelPhone, modelEmail, modelAddress, modelTags);
+
+        // Build payments list
+        final List<Payment> modelPayments = new ArrayList<>();
+        for (JsonAdaptedPayment jap : payments) {
+            modelPayments.add(jap.toModelType());
+        }
+
+        // Use the constructor that accepts payments
+        return new Person(modelName, modelPhone, modelEmail, modelAddress, modelTags, modelPayments);
+
     }
 
 }

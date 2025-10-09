@@ -2,12 +2,15 @@ package seedu.address.model.person;
 
 import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
 import seedu.address.commons.util.ToStringBuilder;
+import seedu.address.model.payment.Payment;
 import seedu.address.model.tag.Tag;
 
 /**
@@ -24,9 +27,10 @@ public class Person {
     // Data fields
     private final Address address;
     private final Set<Tag> tags = new HashSet<>();
+    private final List<Payment> payments;
 
     /**
-     * Every field must be present and not null.
+     * Minimal constructor (AB3 default fields). Starts with no payments.
      */
     public Person(Name name, Phone phone, Email email, Address address, Set<Tag> tags) {
         requireAllNonNull(name, phone, email, address, tags);
@@ -35,6 +39,21 @@ public class Person {
         this.email = email;
         this.address = address;
         this.tags.addAll(tags);
+        this.payments = Collections.unmodifiableList(new ArrayList<>()); // empty immutable list
+    }
+
+    /**
+     * Full constructor including payments.
+     */
+    public Person(Name name, Phone phone, Email email, Address address,
+                  Set<Tag> tags, List<Payment> payments) {
+        requireAllNonNull(name, phone, email, address, tags, payments);
+        this.name = name;
+        this.phone = phone;
+        this.email = email;
+        this.address = address;
+        this.tags.addAll(tags);
+        this.payments = Collections.unmodifiableList(new ArrayList<>(payments));
     }
 
     public Name getName() {
@@ -61,6 +80,21 @@ public class Person {
         return Collections.unmodifiableSet(tags);
     }
 
+    /** Returns an immutable view of the payments list. */
+    public List<Payment> getPayments() {
+        return payments;
+    }
+
+    /**
+     * Returns a new Person that is identical to this person but with one extra payment appended.
+     * This preserves immutability.
+     */
+    public Person withAddedPayment(Payment payment) {
+        List<Payment> updated = new ArrayList<>(this.payments);
+        updated.add(payment);
+        return new Person(name, phone, email, address, tags, updated);
+    }
+
     /**
      * Returns true if both persons have the same name.
      * This defines a weaker notion of equality between two persons.
@@ -76,7 +110,7 @@ public class Person {
 
     /**
      * Returns true if both persons have the same identity and data fields.
-     * This defines a stronger notion of equality between two persons.
+     * (Note: payments are intentionally not part of equality to preserve AB3 semantics.)
      */
     @Override
     public boolean equals(Object other) {
@@ -84,7 +118,6 @@ public class Person {
             return true;
         }
 
-        // instanceof handles nulls
         if (!(other instanceof Person)) {
             return false;
         }
@@ -99,7 +132,6 @@ public class Person {
 
     @Override
     public int hashCode() {
-        // use this method for custom fields hashing instead of implementing your own
         return Objects.hash(name, phone, email, address, tags);
     }
 
@@ -111,7 +143,7 @@ public class Person {
                 .add("email", email)
                 .add("address", address)
                 .add("tags", tags)
+                .add("paymentsCount", payments.size())
                 .toString();
     }
-
 }

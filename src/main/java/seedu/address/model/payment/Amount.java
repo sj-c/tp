@@ -1,77 +1,79 @@
 package seedu.address.model.payment;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.Objects;
 
 /**
  * Immutable value object representing a monetary amount.
- * <p>
- * Enforces domain rules: strictly positive and at most 2 decimal places.
+ * Rules:
+ *  - strictly positive
+ *  - at most 2 decimal places
+ *  - stored at fixed scale of 2 without rounding
  */
-public final class Amount {
-    /** Message used when construction fails validation. */
+public final class Amount implements Comparable<Amount> {
     public static final String MESSAGE_CONSTRAINTS =
             "Invalid amount (must be positive, up to 2 decimal places).";
+    public static final int SCALE = 2;
 
-    /** Fixed scale (number of decimal places). */
-    private static final int SCALE = 2;
+    private final BigDecimal value;
 
-    /** Normalized decimal value at scale {@link #SCALE}. */
-    public final BigDecimal value;
-
-    /**
-     * Constructs an {@code Amount} from a raw string.
-     *
-     * @param rawString decimal string (e.g., {@code "12.34"})
-     * @throws IllegalArgumentException if not strictly positive or exceeds 2 dp
-     * @throws NumberFormatException if the string cannot be parsed as a decimal
-     */
-    public Amount(String rawString) {
-        this.value = parse(rawString);
-        validate(); // ensure it's positive
-    }
-
-    /**
-     * Constructs an {@code Amount} from a {@link BigDecimal}.
-     *
-     * @param value decimal value
-     * @throws IllegalArgumentException if not strictly positive or exceeds 2 dp
-     * @throws ArithmeticException if scaling is not exact
-     */
     public Amount(BigDecimal value) {
-        this.value = value.setScale(SCALE, BigDecimal.ROUND_UNNECESSARY);
-        validate();
+        this.value = normalize(value);
     }
 
-    private static BigDecimal parse(String raw) {
-        BigDecimal v = new BigDecimal(raw);
-        // May throw ArithmeticException if more than 2 dp
-        return v.setScale(SCALE, BigDecimal.ROUND_UNNECESSARY);
-    }
-
-    private void validate() {
-        if (value.signum() <= 0) {
-            throw new IllegalArgumentException(MESSAGE_CONSTRAINTS);
+    /** Parse from a string such as "12.34". */
+    public static Amount parse(String raw) {
+        if (raw == null) {
+            throw new NullPointerException("raw");
+        }
+        String s = raw.trim();
+        try {
+            return new Amount(new BigDecimal(s));
+        } catch (NumberFormatException nfe) {
+            throw new IllegalArgumentException(MESSAGE_CONSTRAINTS, nfe);
         }
     }
 
-    /**
-     * Returns the plain string form (no scientific notation).
-     */
+    /** Internal BigDecimal at scale 2. */
+    public BigDecimal asBigDecimal() {
+        return value;
+    }
+
     @Override
     public String toString() {
         return value.toPlainString();
     }
 
-    /**
-     * Value equality (same normalized BigDecimal value and scale).
-     */
+    @Override
+    public int compareTo(Amount other) {
+        return this.value.compareTo(other.value);
+    }
+
     @Override
     public boolean equals(Object o) {
-        return (o instanceof Amount) && value.equals(((Amount) o).value);
+        if (o == this) return true;
+        if (!(o instanceof Amount)) return false;
+        Amount other = (Amount) o;
+        return value.equals(other.value);
     }
 
     @Override
     public int hashCode() {
         return value.hashCode();
+    }
+
+    // ---------- helpers ----------
+
+    private static BigDecimal normalize(BigDecimal input) {
+        Objects.requireNonNull(input, "value");
+        if (input.signum() <= 0) {
+            throw new IllegalArgumentException(MESSAGE_CONSTRAINTS);
+        }
+        if (input.scale() > SCALE) {
+            // do not round silently
+            throw new IllegalArgumentException(MESSAGE_CONSTRAINTS);
+        }
+        return input.setScale(SCALE, RoundingMode.UNNECESSARY);
     }
 }
