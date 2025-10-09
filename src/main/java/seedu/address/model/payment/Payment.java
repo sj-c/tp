@@ -1,17 +1,29 @@
 package seedu.address.model.payment;
 
-import static java.util.Objects.requireNonNull;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+/**
+ * Immutable record of a single payment made by a member.
+ * <p>
+ * Contains the business date of the payment, the amount, optional remarks,
+ * and a system timestamp ({@code recordedAt}) for chronology.
+ */
 public class Payment {
-    private final Amount amount; // note: a separate class for amount to handle formatting and negative values
+    private final Amount amount;
     private final LocalDate date;
-    private String remarks;
+    private final String remarks;
     private final LocalDateTime recordedAt;
 
+    /**
+     * Constructs a {@code Payment}.
+     *
+     * @param amount     monetary amount (must be valid per {@link Amount})
+     * @param date       business date of the payment
+     * @param remarks    optional remarks (may be {@code null})
+     * @param recordedAt system timestamp when this record was created
+     */
     public Payment(Amount amount, LocalDate date, String remarks, LocalDateTime recordedAt) {
         this.amount = amount;
         this.date = date;
@@ -19,32 +31,53 @@ public class Payment {
         this.recordedAt = recordedAt;
     }
 
+    /**
+     * Constructs a {@code Payment} without remarks.
+     *
+     * @param amount     monetary amount
+     * @param date       business date of the payment
+     * @param recordedAt system timestamp when this record was created
+     */
     public Payment(Amount amount, LocalDate date, LocalDateTime recordedAt) {
         this(amount, date, null, recordedAt);
     }
 
+    /** Returns the payment amount. */
     public Amount getAmount() {
         return amount;
     }
 
+    /** Returns the business date of the payment. */
     public LocalDate getDate() {
         return date;
     }
 
+    /**
+     * Returns the optional remarks.
+     *
+     * @return {@code Optional.empty()} if no remarks were provided
+     */
     public Optional<String> getRemarks() {
         return Optional.ofNullable(remarks);
     }
 
+    /** Returns the system timestamp when this record was created. */
     public LocalDateTime getRecordedAt() {
         return recordedAt;
     }
 
+    /**
+     * Human-readable summary including amount, date, and remarks (if present).
+     */
     @Override
     public String toString() {
         return String.format("$%s on %s%s",
                 amount, date, remarks == null ? "" : " (" + remarks + ")");
     }
 
+    /**
+     * Structural equality across amount, date, remarks, and recordedAt.
+     */
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof Payment)) {
