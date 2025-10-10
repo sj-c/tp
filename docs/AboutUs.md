@@ -22,7 +22,7 @@ You can reach us at the email `seer[at]comp.nus.edu.sg`
 
 ### Chia Sin Jie 
 
-<img src="images/sjc.png" width="200px">
+<img src="images/sj-c.png" width="200px">
 
 [[github](http://github.com/sjc)] [[portfolio](team/sjc.md)]
 
