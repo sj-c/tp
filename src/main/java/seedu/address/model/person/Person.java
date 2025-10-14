@@ -25,19 +25,19 @@ public class Person {
     private final Email email;
 
     // Data fields
-    private final Address address;
+    private final MatriculationNumber matriculationNumber;
     private final Set<Tag> tags = new HashSet<>();
     private final List<Payment> payments;
 
     /**
      * Minimal constructor (AB3 default fields). Starts with no payments.
      */
-    public Person(Name name, Phone phone, Email email, Address address, Set<Tag> tags) {
-        requireAllNonNull(name, phone, email, address, tags);
+    public Person(Name name, Phone phone, Email email, MatriculationNumber matriculationNumber, Set<Tag> tags) {
+        requireAllNonNull(name, phone, email, matriculationNumber, tags);
         this.name = name;
         this.phone = phone;
         this.email = email;
-        this.address = address;
+        this.matriculationNumber = matriculationNumber;
         this.tags.addAll(tags);
         this.payments = Collections.unmodifiableList(new ArrayList<>()); // empty immutable list
     }
@@ -45,13 +45,13 @@ public class Person {
     /**
      * Full constructor including payments.
      */
-    public Person(Name name, Phone phone, Email email, Address address,
+    public Person(Name name, Phone phone, Email email, MatriculationNumber matriculationNumber,
                   Set<Tag> tags, List<Payment> payments) {
-        requireAllNonNull(name, phone, email, address, tags, payments);
+        requireAllNonNull(name, phone, email, matriculationNumber, tags, payments);
         this.name = name;
         this.phone = phone;
         this.email = email;
-        this.address = address;
+        this.matriculationNumber = matriculationNumber;
         this.tags.addAll(tags);
         this.payments = Collections.unmodifiableList(new ArrayList<>(payments));
     }
@@ -68,8 +68,8 @@ public class Person {
         return email;
     }
 
-    public Address getAddress() {
-        return address;
+    public MatriculationNumber getMatriculationNumber() {
+        return matriculationNumber;
     }
 
     /**
@@ -85,6 +85,11 @@ public class Person {
         return payments;
     }
 
+    /** Returns size of payments list. */
+    public int getPaymentsSize() {
+        return payments.size();
+    }
+
     /**
      * Returns a new Person that is identical to this person but with one extra payment appended.
      * This preserves immutability.
@@ -92,11 +97,11 @@ public class Person {
     public Person withAddedPayment(Payment payment) {
         List<Payment> updated = new ArrayList<>(this.payments);
         updated.add(payment);
-        return new Person(name, phone, email, address, tags, updated);
+        return new Person(name, phone, email, matriculationNumber, tags, updated);
     }
 
     /**
-     * Returns true if both persons have the same name.
+     * Returns true if both persons have the same matriculation number.
      * This defines a weaker notion of equality between two persons.
      */
     public boolean isSamePerson(Person otherPerson) {
@@ -104,9 +109,13 @@ public class Person {
             return true;
         }
 
-        return otherPerson != null
-                && otherPerson.getName().equals(getName());
+        if (otherPerson == null) {
+            return false;
+        }
+
+        return otherPerson.getMatriculationNumber().equals(getMatriculationNumber());
     }
+
 
     /**
      * Returns true if both persons have the same identity and data fields.
@@ -126,13 +135,13 @@ public class Person {
         return name.equals(otherPerson.name)
                 && phone.equals(otherPerson.phone)
                 && email.equals(otherPerson.email)
-                && address.equals(otherPerson.address)
+                && matriculationNumber.equals(otherPerson.matriculationNumber)
                 && tags.equals(otherPerson.tags);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, phone, email, address, tags);
+        return Objects.hash(name, phone, email, matriculationNumber, tags);
     }
 
     @Override
@@ -141,7 +150,7 @@ public class Person {
                 .add("name", name)
                 .add("phone", phone)
                 .add("email", email)
-                .add("address", address)
+                .add("matriculationNumber", matriculationNumber)
                 .add("tags", tags)
                 .add("paymentsCount", payments.size())
                 .toString();
