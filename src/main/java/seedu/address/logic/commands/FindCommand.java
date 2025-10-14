@@ -13,7 +13,7 @@ import seedu.address.model.person.Person;
  * Finds and lists all persons whose names or tags contain any of the argument keywords.
  * Keyword matching is case-insensitive.
  */
-public class FindMemberCommand extends Command {
+public class FindCommand extends Command {
 
     public static final String COMMAND_WORD = "find";
 
@@ -24,7 +24,7 @@ public class FindMemberCommand extends Command {
 
     private final Predicate<Person> predicate;
 
-    public FindMemberCommand(Predicate<Person> predicate) {
+    public FindCommand(Predicate<Person> predicate) {
         this.predicate = predicate;
     }
 
@@ -41,8 +41,8 @@ public class FindMemberCommand extends Command {
     @Override
     public boolean equals(Object other) {
         return other == this
-                || (other instanceof FindMemberCommand
-                && predicate.equals(((FindMemberCommand) other).predicate));
+                || (other instanceof FindCommand
+                && predicate.equals(((FindCommand) other).predicate));
     }
 
     @Override

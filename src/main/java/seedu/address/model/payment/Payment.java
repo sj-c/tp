@@ -11,7 +11,7 @@ import java.util.Objects;
 public final class Payment {
     private final Amount amount;
     private final LocalDate date;
-    private final String remarks; // may be null
+    private final String remarks;          // may be null
     private final LocalDateTime recordedAt;
 
     /** Create a payment with no remarks. recordedAt defaults to now. */
@@ -57,12 +57,8 @@ public final class Payment {
 
     @Override
     public boolean equals(Object o) {
-        if (o == this) {
-            return true;
-        }
-        if (!(o instanceof Payment)) {
-            return false;
-        }
+        if (o == this) return true;
+        if (!(o instanceof Payment)) return false;
         Payment p = (Payment) o;
         boolean sameRemarks = (this.remarks == null && p.remarks == null)
                 || (this.remarks != null && this.remarks.equals(p.remarks));
@@ -85,9 +81,7 @@ public final class Payment {
     // ---------- helpers ----------
 
     private static String tidy(String s) {
-        if (s == null) {
-            return null;
-        }
+        if (s == null) return null;
         String t = s.trim();
         return t.isEmpty() ? null : t;
     }
