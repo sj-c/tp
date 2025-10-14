@@ -8,16 +8,19 @@ import java.util.List;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import seedu.address.model.person.exceptions.DuplicateMatriculationNumberException;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
 import seedu.address.model.person.exceptions.PersonNotFoundException;
 
 /**
  * A list of persons that enforces uniqueness between its elements and does not allow nulls.
- * <p>
- * Uniqueness rules:
- * 1. No two persons may share the same matriculation number.
- * 2. No two persons may have the same name, email, and phone combination.
+ * A person is considered unique by comparing using {@code Person#isSamePerson(Person)}. As such, adding and updating of
+ * persons uses Person#isSamePerson(Person) for equality so as to ensure that the person being added or updated is
+ * unique in terms of identity in the UniquePersonList. However, the removal of a person uses Person#equals(Object) so
+ * as to ensure that the person with exactly the same fields will be removed.
+ *
+ * Supports a minimal set of list operations.
+ *
+ * @see Person#isSamePerson(Person)
  */
 public class UniquePersonList implements Iterable<Person> {
 
@@ -26,7 +29,7 @@ public class UniquePersonList implements Iterable<Person> {
             FXCollections.unmodifiableObservableList(internalList);
 
     /**
-     * Returns true if the list contains an equivalent person (same name, phone, and email).
+     * Returns true if the list contains an equivalent person as the given argument.
      */
     public boolean contains(Person toCheck) {
         requireNonNull(toCheck);
@@ -34,37 +37,21 @@ public class UniquePersonList implements Iterable<Person> {
     }
 
     /**
-     * Returns true if the list contains another person with the same matriculation number.
-     */
-    public boolean hasDuplicateMatriculationNumber(Person toCheck) {
-        requireNonNull(toCheck);
-        return internalList.stream().anyMatch(p ->
-                p.getMatriculationNumber().equals(toCheck.getMatriculationNumber()));
-    }
-
-    /**
      * Adds a person to the list.
-     * The person must not already exist and must have a unique matriculation number.
+     * The person must not already exist in the list.
      */
     public void add(Person toAdd) {
         requireNonNull(toAdd);
-
         if (contains(toAdd)) {
             throw new DuplicatePersonException();
         }
-
-        if (hasDuplicateMatriculationNumber(toAdd)) {
-            throw new DuplicateMatriculationNumberException();
-        }
-
         internalList.add(toAdd);
     }
 
     /**
      * Replaces the person {@code target} in the list with {@code editedPerson}.
      * {@code target} must exist in the list.
-     * The person identity and matriculation number of {@code editedPerson} must not
-     * duplicate another person in the list.
+     * The person identity of {@code editedPerson} must not be the same as another existing person in the list.
      */
     public void setPerson(Person target, Person editedPerson) {
         requireAllNonNull(target, editedPerson);
@@ -78,28 +65,12 @@ public class UniquePersonList implements Iterable<Person> {
             throw new DuplicatePersonException();
         }
 
-        boolean duplicateMatric = internalList.stream()
-                .anyMatch(p -> !p.equals(target)
-                        && p.getMatriculationNumber().equals(editedPerson.getMatriculationNumber()));
-
-        if (duplicateMatric) {
-            throw new DuplicateMatriculationNumberException();
-        }
-
         internalList.set(index, editedPerson);
     }
 
     /**
-     * Removes the equivalent {@code Person} from the list.
-     *
-     * <p>
-     * The person to remove must exist in the list. Equality is determined by
-     * {@link Person#equals(Object)}.
-     * </p>
-     *
-     * @param toRemove the person to be removed from the list; must not be {@code null}
-     * @throws NullPointerException    if {@code toRemove} is {@code null}
-     * @throws PersonNotFoundException if the person to remove does not exist in the list
+     * Removes the equivalent person from the list.
+     * The person must exist in the list.
      */
     public void remove(Person toRemove) {
         requireNonNull(toRemove);
@@ -113,19 +84,22 @@ public class UniquePersonList implements Iterable<Person> {
         internalList.setAll(replacement.internalList);
     }
 
+    /**
+     * Replaces the contents of this list with {@code persons}.
+     * {@code persons} must not contain duplicate persons.
+     */
     public void setPersons(List<Person> persons) {
         requireAllNonNull(persons);
         if (!personsAreUnique(persons)) {
             throw new DuplicatePersonException();
         }
 
-        if (!matriculationNumbersAreUnique(persons)) {
-            throw new DuplicateMatriculationNumberException();
-        }
-
         internalList.setAll(persons);
     }
 
+    /**
+     * Returns the backing list as an unmodifiable {@code ObservableList}.
+     */
     public ObservableList<Person> asUnmodifiableObservableList() {
         return internalUnmodifiableList;
     }
@@ -137,9 +111,17 @@ public class UniquePersonList implements Iterable<Person> {
 
     @Override
     public boolean equals(Object other) {
-        return other == this
-                || (other instanceof UniquePersonList
-                && internalList.equals(((UniquePersonList) other).internalList));
+        if (other == this) {
+            return true;
+        }
+
+        // instanceof handles nulls
+        if (!(other instanceof UniquePersonList)) {
+            return false;
+        }
+
+        UniquePersonList otherUniquePersonList = (UniquePersonList) other;
+        return internalList.equals(otherUniquePersonList.internalList);
     }
 
     @Override
@@ -152,24 +134,13 @@ public class UniquePersonList implements Iterable<Person> {
         return internalList.toString();
     }
 
-    // ---------- Helper methods ----------
-
+    /**
+     * Returns true if {@code persons} contains only unique persons.
+     */
     private boolean personsAreUnique(List<Person> persons) {
         for (int i = 0; i < persons.size() - 1; i++) {
             for (int j = i + 1; j < persons.size(); j++) {
                 if (persons.get(i).isSamePerson(persons.get(j))) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    private boolean matriculationNumbersAreUnique(List<Person> persons) {
-        for (int i = 0; i < persons.size() - 1; i++) {
-            for (int j = i + 1; j < persons.size(); j++) {
-                if (persons.get(i).getMatriculationNumber()
-                        .equals(persons.get(j).getMatriculationNumber())) {
                     return false;
                 }
             }

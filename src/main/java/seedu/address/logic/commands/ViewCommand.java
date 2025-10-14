@@ -13,7 +13,7 @@ import seedu.address.model.person.Person;
 /**
  * Displays the details of a specific member in the member list.
  */
-public class ViewMemberCommand extends Command {
+public class ViewCommand extends Command {
 
     public static final String COMMAND_WORD = "view";
     public static final String MESSAGE_USAGE = COMMAND_WORD
@@ -25,7 +25,7 @@ public class ViewMemberCommand extends Command {
 
     private final Index targetIndex;
 
-    public ViewMemberCommand(Index targetIndex) {
+    public ViewCommand(Index targetIndex) {
         this.targetIndex = targetIndex;
     }
 
@@ -46,7 +46,7 @@ public class ViewMemberCommand extends Command {
     @Override
     public boolean equals(Object other) {
         return other == this // short circuit if same object
-                || (other instanceof ViewMemberCommand // instanceof handles nulls
-                && targetIndex.equals(((ViewMemberCommand) other).targetIndex));
+                || (other instanceof ViewCommand // instanceof handles nulls
+                && targetIndex.equals(((ViewCommand) other).targetIndex));
     }
 }

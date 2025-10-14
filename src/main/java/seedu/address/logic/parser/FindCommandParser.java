@@ -40,7 +40,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 
-import seedu.address.logic.commands.FindMemberCommand;
+import seedu.address.logic.commands.FindCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.person.NameContainsKeywordsPredicate;
 import seedu.address.model.person.Person;
@@ -50,14 +50,14 @@ import seedu.address.model.person.TagContainsKeywordsPredicate;
  * Parses input arguments and creates a new FindCommand object.
  * Now searches by tag instead of name.
  */
-public class FindCommandParser implements Parser<FindMemberCommand> {
+public class FindCommandParser implements Parser<FindCommand> {
 
     @Override
-    public FindMemberCommand parse(String args) throws ParseException {
+    public FindCommand parse(String args) throws ParseException {
         String trimmedArgs = args.trim();
         if (trimmedArgs.isEmpty()) {
             throw new ParseException(
-                    String.format(MESSAGE_INVALID_COMMAND_FORMAT, FindMemberCommand.MESSAGE_USAGE));
+                    String.format(MESSAGE_INVALID_COMMAND_FORMAT, FindCommand.MESSAGE_USAGE));
         }
 
         List<String> keywords = Arrays.asList(trimmedArgs.split("\\s+"));
@@ -66,6 +66,6 @@ public class FindCommandParser implements Parser<FindMemberCommand> {
                 new NameContainsKeywordsPredicate(keywords).test(person)
                         || new TagContainsKeywordsPredicate(keywords).test(person);
 
-        return new FindMemberCommand(combinedPredicate);
+        return new FindCommand(combinedPredicate);
     }
 }
