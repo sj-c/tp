@@ -106,6 +106,16 @@ public class Person {
     }
 
     /**
+     * Returns a new Person that is identical to this person but with the given payment removed.
+     * If the payment does not exist, this person is returned unchanged.
+     */
+    public Person withRemovedPayment(Payment paymentToRemove) {
+        List<Payment> updated = new ArrayList<>(this.payments);
+        updated.remove(paymentToRemove);
+        return new Person(name, phone, email, address, tags, archived, updated);
+    }
+
+    /**
      * Returns true if both persons have the same name.
      * This defines a weaker notion of equality between two persons.
      */

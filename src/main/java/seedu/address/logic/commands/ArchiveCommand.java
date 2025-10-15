@@ -33,6 +33,13 @@ public class ArchiveCommand extends Command {
 
     private final List<Index> targetIndexes;
 
+    /**
+     * Constructs an {@code ArchiveCommand} to archive one or more persons in the displayed list.
+     * Duplicate indexes are removed while preserving the original order.
+     *
+     * @param targetIndexes The list of one-based indexes of persons to archive.
+     * @throws NullPointerException if {@code targetIndexes} is null.
+     */
     public ArchiveCommand(List<Index> targetIndexes) {
         requireNonNull(targetIndexes);
         // remove duplicates while preserving order
