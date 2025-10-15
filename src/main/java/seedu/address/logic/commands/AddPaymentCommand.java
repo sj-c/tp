@@ -10,9 +10,9 @@ import java.util.List;
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
-import seedu.address.model.person.Person;
 import seedu.address.model.payment.Amount;
 import seedu.address.model.payment.Payment;
+import seedu.address.model.person.Person;
 
 /**
  * Adds a payment to a person identified by the index number in the displayed list.
@@ -22,7 +22,7 @@ public class AddPaymentCommand extends Command {
     public static final String COMMAND_WORD = "addpayment";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD
-            + ": Adds a payment to one or more persons identified by their indexes, as shown in the displayed person list.\n"
+            + ": Adds a payment to one or more persons identified by their index as displayed in the person list.\n"
             + "Parameters: INDEX[,INDEX]... a/AMOUNT d/DATE [r/REMARKS]\n"
             + "Example (single index): " + COMMAND_WORD + " 1 a/23.50 d/2025-10-09 r/taxi home\n"
             + "Example (multiple indexes): " + COMMAND_WORD + " 1,2,5 a/23.50 d/2025-10-09 r/taxi home";
@@ -30,6 +30,15 @@ public class AddPaymentCommand extends Command {
     private final List<Index> indexes;
     private final Payment payment;
 
+    /**
+     * Constructs an {@code AddPaymentCommand} to add a payment to one or more persons.
+     *
+     * @param indexes The list of one-based indexes of persons in the displayed list to add the payment to.
+     * @param amount The amount of the payment.
+     * @param date The date of the payment.
+     * @param remarks Optional remarks for the payment. Can be null.
+     * @throws NullPointerException if {@code indexes}, {@code amount}, or {@code date} is null.
+     */
     public AddPaymentCommand(List<Index> indexes, Amount amount, LocalDate date, String remarks) {
         requireNonNull(indexes);
         requireNonNull(amount);
