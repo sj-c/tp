@@ -32,6 +32,7 @@ class JsonAdaptedPerson {
     private final String email;
     private final String address;
     private final List<JsonAdaptedTag> tags = new ArrayList<>();
+    private final Boolean archived;
     private final List<JsonAdaptedPayment> payments = new ArrayList<>();
 
     /**
@@ -43,6 +44,7 @@ class JsonAdaptedPerson {
                              @JsonProperty("email") String email,
                              @JsonProperty("address") String address,
                              @JsonProperty("tags") List<JsonAdaptedTag> tags,
+                             @JsonProperty("archived") Boolean archived,
                              @JsonProperty("payments") List<JsonAdaptedPayment> payments) {
         this.name = name;
         this.phone = phone;
@@ -51,6 +53,7 @@ class JsonAdaptedPerson {
         if (tags != null) {
             this.tags.addAll(tags);
         }
+        this.archived = (archived == null) ? Boolean.FALSE : archived;
         if (payments != null) {
             this.payments.addAll(payments);
         }
@@ -68,6 +71,7 @@ class JsonAdaptedPerson {
         tags.addAll(source.getTags().stream()
                 .map(JsonAdaptedTag::new)
                 .collect(Collectors.toList()));
+        this.archived = source.isArchived();
         source.getPayments().stream()
                 .map(JsonAdaptedPayment::new)
                 .forEach(this.payments::add);
@@ -119,6 +123,8 @@ class JsonAdaptedPerson {
 
         final Set<Tag> modelTags = new HashSet<>(personTags);
 
+        final boolean modelArchived = this.archived != null && this.archived;
+
         // Build payments list
         final List<Payment> modelPayments = new ArrayList<>();
         for (JsonAdaptedPayment jap : payments) {
@@ -126,7 +132,7 @@ class JsonAdaptedPerson {
         }
 
         // Use the constructor that accepts payments
-        return new Person(modelName, modelPhone, modelEmail, modelAddress, modelTags, modelPayments);
+        return new Person(modelName, modelPhone, modelEmail, modelAddress, modelTags, modelArchived, modelPayments);
 
     }
 

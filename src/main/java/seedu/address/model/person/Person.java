@@ -28,6 +28,7 @@ public class Person {
     private final Address address;
     private final Set<Tag> tags = new HashSet<>();
     private final List<Payment> payments;
+    private final boolean archived;
 
     /**
      * Minimal constructor (AB3 default fields). Starts with no payments.
@@ -39,6 +40,7 @@ public class Person {
         this.email = email;
         this.address = address;
         this.tags.addAll(tags);
+        this.archived = false;
         this.payments = Collections.unmodifiableList(new ArrayList<>()); // empty immutable list
     }
 
@@ -46,13 +48,14 @@ public class Person {
      * Full constructor including payments.
      */
     public Person(Name name, Phone phone, Email email, Address address,
-                  Set<Tag> tags, List<Payment> payments) {
+                  Set<Tag> tags, boolean archived, List<Payment> payments) {
         requireAllNonNull(name, phone, email, address, tags, payments);
         this.name = name;
         this.phone = phone;
         this.email = email;
         this.address = address;
         this.tags.addAll(tags);
+        this.archived = archived;
         this.payments = Collections.unmodifiableList(new ArrayList<>(payments));
     }
 
@@ -80,6 +83,13 @@ public class Person {
         return Collections.unmodifiableSet(tags);
     }
 
+    public boolean isArchived() { return archived; }
+
+    /** NEW: copy-with for archived flag */
+    public Person withArchived(boolean newArchived) {
+        return new Person(name, phone, email, address, tags, newArchived, payments);
+    }
+
     /** Returns an immutable view of the payments list. */
     public List<Payment> getPayments() {
         return payments;
@@ -92,7 +102,7 @@ public class Person {
     public Person withAddedPayment(Payment payment) {
         List<Payment> updated = new ArrayList<>(this.payments);
         updated.add(payment);
-        return new Person(name, phone, email, address, tags, updated);
+        return new Person(name, phone, email, address, tags, archived, updated);
     }
 
     /**
@@ -114,20 +124,15 @@ public class Person {
      */
     @Override
     public boolean equals(Object other) {
-        if (other == this) {
-            return true;
-        }
-
-        if (!(other instanceof Person)) {
-            return false;
-        }
-
-        Person otherPerson = (Person) other;
-        return name.equals(otherPerson.name)
-                && phone.equals(otherPerson.phone)
-                && email.equals(otherPerson.email)
-                && address.equals(otherPerson.address)
-                && tags.equals(otherPerson.tags);
+        if (other == this) return true;
+        if (!(other instanceof Person)) return false;
+        Person o = (Person) other;
+        return name.equals(o.name)
+                && phone.equals(o.phone)
+                && email.equals(o.email)
+                && address.equals(o.address)
+                && tags.equals(o.tags)
+                && archived == o.archived;
     }
 
     @Override
@@ -143,6 +148,7 @@ public class Person {
                 .add("email", email)
                 .add("address", address)
                 .add("tags", tags)
+                .add("archived", archived)
                 .add("paymentsCount", payments.size())
                 .toString();
     }
