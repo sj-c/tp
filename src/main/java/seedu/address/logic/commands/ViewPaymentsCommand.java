@@ -87,12 +87,22 @@ public class ViewPaymentsCommand extends Command {
                 .map(p -> p.getAmount().asBigDecimal())
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        String list = sorted.stream()
-                .map(p -> String.format("- %s | %s%s",
-                        DATE_FMT.format(p.getDate()),
-                        p.getAmount().toString(),
-                        (p.getRemarks() == null || p.getRemarks().isEmpty()) ? "" : (" | " + p.getRemarks())))
-                .collect(Collectors.joining("\n"));
+        StringBuilder body = new StringBuilder();
+        for (int i = 0; i < sorted.size(); i++) {
+            Payment p = sorted.get(i);
+            body.append(i + 1).append(". ")
+                    .append(DATE_FMT.format(p.getDate()))
+                    .append(" | ")
+                    .append(p.getAmount().toString());
+
+            if (p.getRemarks() != null && !p.getRemarks().isEmpty()) {
+                body.append(" | ").append(p.getRemarks());
+            }
+            if (i < sorted.size() - 1) {
+                body.append("\n");
+            }
+        }
+        String list = body.toString();
 
         String header = String.format("Payments for %s (%d). Total: %s",
                 person.getName(), sorted.size(), total.toPlainString());

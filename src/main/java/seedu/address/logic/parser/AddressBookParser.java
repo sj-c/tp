@@ -25,6 +25,8 @@ import seedu.address.logic.commands.AddPaymentCommand;
 import seedu.address.logic.commands.DeletePaymentCommand;
 import seedu.address.logic.commands.ViewPaymentsCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.logic.commands.EditPaymentCommand;
+import seedu.address.logic.parser.EditPaymentCommandParser;
 
 /**
  * Parses user input.
@@ -104,6 +106,9 @@ public class AddressBookParser {
 
         case DeletePaymentCommand.COMMAND_WORD:
             return new DeletePaymentCommandParser().parse(arguments);
+
+        case EditPaymentCommand.COMMAND_WORD:
+         return new EditPaymentCommandParser().parse(arguments);
 
         default:
             logger.finer("This user input caused a ParseException: " + userInput);

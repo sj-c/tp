@@ -115,6 +115,13 @@ public class Person {
         return new Person(name, phone, email, address, tags, archived, updated);
     }
 
+    /** Returns a new Person with the payment at {@code zeroBasedPaymentIndex} replaced by {@code edited}. */
+    public Person withEditedPayment(int zeroBasedPaymentIndex, Payment edited) {
+        List<Payment> updated = new ArrayList<>(this.payments);
+        updated.set(zeroBasedPaymentIndex, edited);
+        return new Person(name, phone, email, address, tags, archived, updated);
+    }
+
     /**
      * Returns true if both persons have the same name.
      * This defines a weaker notion of equality between two persons.
