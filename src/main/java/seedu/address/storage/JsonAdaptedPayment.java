@@ -10,16 +10,21 @@ import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.model.payment.Amount;
 import seedu.address.model.payment.Payment;
 
-/** Jackson-friendly version of {@code Payment}. */
+/**
+ * Jackson-friendly version of {@code Payment}.
+ */
 public class JsonAdaptedPayment {
 
     public static final String MISSING_FIELD_MESSAGE_FORMAT = "Payment's %s field is missing";
 
-    private final String amount;     // e.g. "12.34"
-    private final String date;       // yyyy-MM-dd
-    private final String remarks;    // optional, may be null
+    private final String amount; // e.g. "12.34"
+    private final String date; // yyyy-MM-dd
+    private final String remarks; // optional, may be null
     private final String recordedAt; // ISO-8601, e.g. 2025-10-15T14:23:05.123
 
+    /**
+     * Constructs a {@code JsonAdaptedPayment} with the given JSON properties.
+     */
     @JsonCreator
     public JsonAdaptedPayment(@JsonProperty("amount") String amount,
                               @JsonProperty("date") String date,
@@ -31,6 +36,9 @@ public class JsonAdaptedPayment {
         this.recordedAt = recordedAt; // may be null for older save files
     }
 
+    /**
+     * Converts a given {@code Payment} into this class for Jackson use.
+     */
     public JsonAdaptedPayment(Payment source) {
         this.amount = source.getAmount().toString();
         this.date = source.getDate().toString();
@@ -38,6 +46,11 @@ public class JsonAdaptedPayment {
         this.recordedAt = source.getRecordedAt().toString();
     }
 
+    /**
+     * Converts this Jackson-friendly adapted payment object into the model's {@code Payment} object.
+     *
+     * @throws IllegalValueException if any field data constraints are violated.
+     */
     public Payment toModelType() throws IllegalValueException {
         if (amount == null || amount.isBlank()) {
             throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, "amount"));
@@ -48,7 +61,6 @@ public class JsonAdaptedPayment {
 
         final Amount modelAmount;
         try {
-            // Adjust if your Amount API differs.
             modelAmount = Amount.parse(amount.trim());
         } catch (IllegalArgumentException e) {
             throw new IllegalValueException("Invalid amount: " + amount);
@@ -63,15 +75,13 @@ public class JsonAdaptedPayment {
 
         final LocalDateTime modelRecordedAt;
         try {
-            // If missing (older JSON), default to now so deserialization still succeeds.
             modelRecordedAt = (recordedAt == null || recordedAt.isBlank())
-                    ? LocalDateTime.now()
-                    : LocalDateTime.parse(recordedAt.trim());
+                ? LocalDateTime.now()
+                : LocalDateTime.parse(recordedAt.trim());
         } catch (Exception e) {
             throw new IllegalValueException("Invalid recordedAt: " + recordedAt + " (expected ISO-8601)");
         }
 
         return new Payment(modelAmount, modelDate, remarks, modelRecordedAt);
-        // Payment constructor already tidies remarks (null or trimmed)
     }
 }

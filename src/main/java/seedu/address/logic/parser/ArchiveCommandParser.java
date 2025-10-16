@@ -9,13 +9,18 @@ import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.ArchiveCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 
+/**
+ * Parses input arguments and creates a new {@code ArchiveCommand} object.
+ */
 public class ArchiveCommandParser implements Parser<ArchiveCommand> {
+
     @Override
     public ArchiveCommand parse(String args) throws ParseException {
         try {
             String trimmedArgs = args.trim();
             if (trimmedArgs.isEmpty()) {
-                throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ArchiveCommand.MESSAGE_USAGE));
+                throw new ParseException(String.format(
+                    MESSAGE_INVALID_COMMAND_FORMAT, ArchiveCommand.MESSAGE_USAGE));
             }
 
             String[] tokens = trimmedArgs.split(",");
@@ -28,12 +33,14 @@ public class ArchiveCommandParser implements Parser<ArchiveCommand> {
             }
 
             if (indexes.isEmpty()) {
-                throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ArchiveCommand.MESSAGE_USAGE));
+                throw new ParseException(String.format(
+                    MESSAGE_INVALID_COMMAND_FORMAT, ArchiveCommand.MESSAGE_USAGE));
             }
 
             return new ArchiveCommand(indexes);
         } catch (ParseException pe) {
-            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ArchiveCommand.MESSAGE_USAGE), pe);
+            throw new ParseException(String.format(
+                MESSAGE_INVALID_COMMAND_FORMAT, ArchiveCommand.MESSAGE_USAGE), pe);
         }
     }
 }

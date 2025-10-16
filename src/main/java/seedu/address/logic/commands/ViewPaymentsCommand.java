@@ -12,22 +12,22 @@ import java.util.stream.Collectors;
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
-import seedu.address.model.person.Person;
 import seedu.address.model.payment.Payment;
+import seedu.address.model.person.Person;
 
 /**
  * Shows payments for one person by index, or for everyone if 'all' is used.
- *
+ * <p>
  * Usage:
- *   viewpayment INDEX
- *   viewpayment all
+ * viewpayment INDEX
+ * viewpayment all
  */
 public class ViewPaymentsCommand extends Command {
 
     public static final String COMMAND_WORD = "viewpayment";
     public static final String MESSAGE_USAGE = COMMAND_WORD + ": Shows recorded payments.\n"
-            + "Parameters: INDEX (positive integer) OR 'all'\n"
-            + "Examples: " + COMMAND_WORD + " 1    |    " + COMMAND_WORD + " all";
+        + "Parameters: INDEX (positive integer) OR 'all'\n"
+        + "Examples: " + COMMAND_WORD + " 1    |    " + COMMAND_WORD + " all";
 
     private static final DateTimeFormatter DATE_FMT = DateTimeFormatter.ISO_LOCAL_DATE;
 
@@ -54,18 +54,18 @@ public class ViewPaymentsCommand extends Command {
         if (index == null) {
             String perPerson = people.stream().map(p -> {
                 BigDecimal total = p.getPayments().stream()
-                        .map(pay -> pay.getAmount().asBigDecimal())
-                        .reduce(BigDecimal.ZERO, BigDecimal::add);
+                    .map(pay -> pay.getAmount().asBigDecimal())
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
                 return String.format("- %s: %s", p.getName(), total.toPlainString());
             }).collect(Collectors.joining("\n"));
 
             BigDecimal grand = people.stream()
-                    .flatMap(p -> p.getPayments().stream())
-                    .map(pay -> pay.getAmount().asBigDecimal())
-                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+                .flatMap(p -> p.getPayments().stream())
+                .map(pay -> pay.getAmount().asBigDecimal())
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
 
             String header = String.format("Payments summary for %d people. Grand total: %s",
-                    people.size(), grand.toPlainString());
+                people.size(), grand.toPlainString());
             return new CommandResult(header + (perPerson.isEmpty() ? "\n(no payments)" : "\n" + perPerson));
         }
 
@@ -76,24 +76,24 @@ public class ViewPaymentsCommand extends Command {
 
         Person person = people.get(index.getZeroBased());
         List<Payment> sorted = person.getPayments().stream()
-                .sorted(Comparator.comparing(Payment::getDate).reversed())
-                .collect(Collectors.toList());
+            .sorted(Comparator.comparing(Payment::getDate).reversed())
+            .collect(Collectors.toList());
 
         if (sorted.isEmpty()) {
             return new CommandResult(String.format("%s has no payments recorded.", person.getName()));
         }
 
         BigDecimal total = sorted.stream()
-                .map(p -> p.getAmount().asBigDecimal())
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+            .map(p -> p.getAmount().asBigDecimal())
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         StringBuilder body = new StringBuilder();
         for (int i = 0; i < sorted.size(); i++) {
             Payment p = sorted.get(i);
             body.append(i + 1).append(". ")
-                    .append(DATE_FMT.format(p.getDate()))
-                    .append(" | ")
-                    .append(p.getAmount().toString());
+                .append(DATE_FMT.format(p.getDate()))
+                .append(" | ")
+                .append(p.getAmount().toString());
 
             if (p.getRemarks() != null && !p.getRemarks().isEmpty()) {
                 body.append(" | ").append(p.getRemarks());
@@ -105,15 +105,15 @@ public class ViewPaymentsCommand extends Command {
         String list = body.toString();
 
         String header = String.format("Payments for %s (%d). Total: %s",
-                person.getName(), sorted.size(), total.toPlainString());
+            person.getName(), sorted.size(), total.toPlainString());
         return new CommandResult(header + "\n" + list);
     }
 
     @Override
     public boolean equals(Object other) {
         return other == this
-                || (other instanceof ViewPaymentsCommand
-                && ((this.index == null && ((ViewPaymentsCommand) other).index == null)
-                || (this.index != null && this.index.equals(((ViewPaymentsCommand) other).index))));
+            || (other instanceof ViewPaymentsCommand
+            && ((this.index == null && ((ViewPaymentsCommand) other).index == null)
+            || (this.index != null && this.index.equals(((ViewPaymentsCommand) other).index))));
     }
 }

@@ -23,12 +23,13 @@ public class ArchiveCommand extends Command {
     public static final String COMMAND_WORD = "archive";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD
-            + ": Archives one or more persons identified by their indexes in the displayed person list.\n"
-            + "Parameters: INDEX[,INDEX]... (each must be a positive integer)\n"
-            + "Example (single): " + COMMAND_WORD + " 2\n"
-            + "Example (multiple): " + COMMAND_WORD + " 1,3,5";
+        + ": Archives one or more persons identified by their indexes in the displayed person list.\n"
+        + "Parameters: INDEX[,INDEX]... (each must be a positive integer)\n"
+        + "Example (single): " + COMMAND_WORD + " 2\n"
+        + "Example (multiple): " + COMMAND_WORD + " 1,3,5";
 
-    public static final String MESSAGE_ALREADY_ARCHIVED = "One or more selected persons are already archived: %s";
+    public static final String MESSAGE_ALREADY_ARCHIVED = "One or more selected persons are already "
+        + "archived: %s";
     public static final String MESSAGE_SUCCESS = "Archived: %s";
 
     private final List<Index> targetIndexes;
@@ -45,8 +46,8 @@ public class ArchiveCommand extends Command {
         // remove duplicates while preserving order
         Set<Integer> seenIndexes = new LinkedHashSet<>();
         this.targetIndexes = targetIndexes.stream()
-                .filter(index -> seenIndexes.add(index.getZeroBased()))
-                .collect(Collectors.toUnmodifiableList());
+            .filter(index -> seenIndexes.add(index.getZeroBased()))
+            .collect(Collectors.toUnmodifiableList());
     }
 
     @Override
@@ -73,7 +74,7 @@ public class ArchiveCommand extends Command {
 
         if (!alreadyArchivedNames.isEmpty()) {
             throw new CommandException(String.format(MESSAGE_ALREADY_ARCHIVED,
-                    String.join(", ", alreadyArchivedNames)));
+                String.join(", ", alreadyArchivedNames)));
         }
 
         // apply updates
@@ -91,8 +92,12 @@ public class ArchiveCommand extends Command {
 
     @Override
     public boolean equals(Object other) {
-        if (other == this) return true;
-        if (!(other instanceof ArchiveCommand)) return false;
+        if (other == this) {
+            return true;
+        }
+        if (!(other instanceof ArchiveCommand)) {
+            return false;
+        }
         ArchiveCommand otherCommand = (ArchiveCommand) other;
         return targetIndexes.equals(otherCommand.targetIndexes);
     }

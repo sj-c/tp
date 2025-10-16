@@ -9,8 +9,8 @@ import java.util.List;
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
-import seedu.address.model.person.Person;
 import seedu.address.model.payment.Payment;
+import seedu.address.model.person.Person;
 
 /**
  * Deletes a payment from a person identified by the index number in the displayed list.
@@ -20,10 +20,10 @@ public class DeletePaymentCommand extends Command {
     public static final String COMMAND_WORD = "deletepayment";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD
-            + ": Deletes a payment from one or more persons identified by their indexes, "
-            + "as shown in the displayed person list.\n"
-            + "Parameters: PERSON_INDEX[,PERSON_INDEX]... p/PAYMENT_INDEX\n"
-            + "Example: " + COMMAND_WORD + " 1 p/2";
+        + ": Deletes a payment from one or more persons identified by their indexes, "
+        + "as shown in the displayed person list.\n"
+        + "Parameters: PERSON_INDEX[,PERSON_INDEX]... p/PAYMENT_INDEX\n"
+        + "Example: " + COMMAND_WORD + " 1 p/2";
 
     public static final String MESSAGE_SUCCESS = "Deleted payment #%d from %s";
     public static final String MESSAGE_INVALID_PAYMENT_INDEX = "Invalid payment index for person: %s";
@@ -31,6 +31,9 @@ public class DeletePaymentCommand extends Command {
     private final List<Index> personIndexes;
     private final Index paymentIndex; // index within the person's payment list
 
+    /**
+     * Deletes a payment from a person identified by the index number in the displayed list.
+     */
     public DeletePaymentCommand(List<Index> personIndexes, Index paymentIndex) {
         requireNonNull(personIndexes);
         requireNonNull(paymentIndex);
@@ -73,8 +76,8 @@ public class DeletePaymentCommand extends Command {
     @Override
     public boolean equals(Object other) {
         return other == this
-                || (other instanceof DeletePaymentCommand
-                && personIndexes.equals(((DeletePaymentCommand) other).personIndexes)
-                && paymentIndex.equals(((DeletePaymentCommand) other).paymentIndex));
+            || (other instanceof DeletePaymentCommand
+            && personIndexes.equals(((DeletePaymentCommand) other).personIndexes)
+            && paymentIndex.equals(((DeletePaymentCommand) other).paymentIndex));
     }
 }

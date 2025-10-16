@@ -16,23 +16,30 @@ import seedu.address.model.payment.Amount;
 import seedu.address.model.payment.Payment;
 import seedu.address.model.person.Person;
 
+/**
+ * Edits an existing payment of a person in the address book.
+ */
 public class EditPaymentCommand extends Command {
+
     public static final String COMMAND_WORD = "editpayment";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD + ": Edits one payment of a person.\n"
-            + "Parameters: PERSON_INDEX p/PAYMENT_INDEX [a/AMOUNT] [d/DATE] [r/REMARKS]\n"
-            + "Examples:\n"
-            + "  " + COMMAND_WORD + " 1 p/1 a/10.50\n"
-            + "  " + COMMAND_WORD + " 2 p/3 d/2025-10-15 r/late fee waived";
+        + "Parameters: PERSON_INDEX p/PAYMENT_INDEX [a/AMOUNT] [d/DATE] [r/REMARKS]\n"
+        + "Examples:\n"
+        + "  " + COMMAND_WORD + " 1 p/1 a/10.50\n"
+        + "  " + COMMAND_WORD + " 2 p/3 d/2025-10-15 r/late fee waived";
 
     public static final String MESSAGE_NO_FIELDS = "At least one of a/, d/, r/ must be provided.";
     public static final String MESSAGE_INVALID_PAYMENT_INDEX = "Payment index is invalid for this person.";
     public static final String MESSAGE_SUCCESS = "Edited payment p/%d for %s";
 
-    private final Index personIndex;   // 1-based
+    private final Index personIndex; // 1-based
     private final int paymentOneBased; // 1-based
     private final EditPaymentDescriptor descriptor;
 
+    /**
+     * Creates an EditPaymentCommand to edit the specified payment.
+     */
     public EditPaymentCommand(Index personIndex, int paymentOneBased, EditPaymentDescriptor descriptor) {
         requireNonNull(personIndex);
         requireNonNull(descriptor);
@@ -64,50 +71,88 @@ public class EditPaymentCommand extends Command {
         return new CommandResult(String.format(MESSAGE_SUCCESS, paymentOneBased, updated.getName()));
     }
 
+    /**
+     * Creates a new Payment using updated fields.
+     */
     private static Payment createEditedPayment(Payment original, EditPaymentDescriptor d) {
         Amount amount = d.getAmount().orElse(original.getAmount());
         LocalDate date = d.getDate().orElse(original.getDate());
-        String remarks = d.getRemarks().orElse(original.getRemarks()); // may be null per your model
+        String remarks = d.getRemarks().orElse(original.getRemarks()); // may be null per model
 
         // preserve original recordedAt for auditability
         return new Payment(amount, date, remarks, original.getRecordedAt());
     }
 
     // -------- descriptor --------
+
+    /**
+     * Stores the details to edit a payment.
+     */
     public static class EditPaymentDescriptor {
+
         private Amount amount;
         private LocalDate date;
         private String remarks;
 
-        public boolean isAnyFieldEdited() { return isAnyNonNull(amount, date, remarks); }
+        public boolean isAnyFieldEdited() {
+            return isAnyNonNull(amount, date, remarks);
+        }
 
-        public void setAmount(Amount a) { this.amount = a; }
-        public void setDate(LocalDate d) { this.date = d; }
-        public void setRemarks(String r) { this.remarks = r; }
+        public void setAmount(Amount a) {
+            this.amount = a;
+        }
 
-        public Optional<Amount> getAmount() { return Optional.ofNullable(amount); }
-        public Optional<LocalDate> getDate() { return Optional.ofNullable(date); }
-        public Optional<String> getRemarks() { return Optional.ofNullable(remarks); }
+        public void setDate(LocalDate d) {
+            this.date = d;
+        }
 
-        @Override public boolean equals(Object o) {
-            if (this == o) return true;
-            if (!(o instanceof EditPaymentDescriptor)) return false;
+        public void setRemarks(String r) {
+            this.remarks = r;
+        }
+
+        public Optional<Amount> getAmount() {
+            return Optional.ofNullable(amount);
+        }
+
+        public Optional<LocalDate> getDate() {
+            return Optional.ofNullable(date);
+        }
+
+        public Optional<String> getRemarks() {
+            return Optional.ofNullable(remarks);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof EditPaymentDescriptor)) {
+                return false;
+            }
             EditPaymentDescriptor that = (EditPaymentDescriptor) o;
             return Objects.equals(amount, that.amount)
-                    && Objects.equals(date, that.date)
-                    && Objects.equals(remarks, that.remarks);
+                && Objects.equals(date, that.date)
+                && Objects.equals(remarks, that.remarks);
         }
-        @Override public int hashCode() {
+
+        @Override
+        public int hashCode() {
             return Objects.hash(amount, date, remarks);
         }
     }
 
-    @Override public boolean equals(Object other) {
-        if (other == this) return true;
-        if (!(other instanceof EditPaymentCommand)) return false;
+    @Override
+    public boolean equals(Object other) {
+        if (other == this) {
+            return true;
+        }
+        if (!(other instanceof EditPaymentCommand)) {
+            return false;
+        }
         EditPaymentCommand o = (EditPaymentCommand) other;
         return personIndex.equals(o.personIndex)
-                && paymentOneBased == o.paymentOneBased
-                && Objects.equals(descriptor, o.descriptor);
+            && paymentOneBased == o.paymentOneBased
+            && Objects.equals(descriptor, o.descriptor);
     }
 }

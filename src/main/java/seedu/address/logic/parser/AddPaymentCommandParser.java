@@ -12,7 +12,9 @@ import seedu.address.logic.commands.AddPaymentCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.payment.Amount;
 
-/** Parses input arguments into an AddPaymentCommand. */
+/**
+ * Parses input arguments into an AddPaymentCommand.
+ */
 public class AddPaymentCommandParser implements Parser<AddPaymentCommand> {
 
     // If you already centralize prefixes in CliSyntax, you can import from there instead.
@@ -26,7 +28,8 @@ public class AddPaymentCommandParser implements Parser<AddPaymentCommand> {
 
         // require: index preamble + a/ + d/
         if (map.getPreamble().isBlank() || !arePrefixesPresent(map, PREFIX_AMOUNT, PREFIX_DATE)) {
-            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddPaymentCommand.MESSAGE_USAGE));
+            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
+                AddPaymentCommand.MESSAGE_USAGE));
         }
 
         try {
@@ -41,7 +44,8 @@ public class AddPaymentCommandParser implements Parser<AddPaymentCommand> {
             }
 
             if (indexes.isEmpty()) {
-                throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddPaymentCommand.MESSAGE_USAGE));
+                throw new ParseException(String.format(
+                    MESSAGE_INVALID_COMMAND_FORMAT, AddPaymentCommand.MESSAGE_USAGE));
             }
 
             String amountStr = map.getValue(PREFIX_AMOUNT).get();
@@ -57,11 +61,14 @@ public class AddPaymentCommandParser implements Parser<AddPaymentCommand> {
             throw pe;
         } catch (Exception e) {
             // Amount.parse / LocalDate.parse etc.
-            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddPaymentCommand.MESSAGE_USAGE), e);
+            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
+                AddPaymentCommand.MESSAGE_USAGE), e);
         }
     }
 
-    /** Returns true if none of the prefixes are missing their values in the given {@code ArgumentMultimap}. */
+    /**
+     * Returns true if none of the prefixes are missing their values in the given {@code ArgumentMultimap}.
+     */
     private static boolean arePrefixesPresent(ArgumentMultimap argumentMultimap, Prefix... prefixes) {
         return Stream.of(prefixes).allMatch(prefix -> argumentMultimap.getValue(prefix).isPresent());
     }
