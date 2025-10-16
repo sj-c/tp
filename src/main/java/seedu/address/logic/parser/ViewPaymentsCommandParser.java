@@ -6,6 +6,9 @@ import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.ViewPaymentsCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 
+/**
+ * Parses input arguments and creates a new {@code ViewPaymentsCommand} object.
+ */
 public class ViewPaymentsCommandParser implements Parser<ViewPaymentsCommand> {
     @Override
     public ViewPaymentsCommand parse(String args) throws ParseException {
@@ -18,7 +21,7 @@ public class ViewPaymentsCommandParser implements Parser<ViewPaymentsCommand> {
             return ViewPaymentsCommand.forIndex(index);
         } catch (ParseException pe) {
             throw new ParseException(
-                    String.format(MESSAGE_INVALID_COMMAND_FORMAT, ViewPaymentsCommand.MESSAGE_USAGE), pe);
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, ViewPaymentsCommand.MESSAGE_USAGE), pe);
         }
     }
 }

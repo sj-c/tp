@@ -14,12 +14,15 @@ import seedu.address.logic.commands.EditPaymentCommand.EditPaymentDescriptor;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.payment.Amount;
 
+/**
+ * Parses input arguments and creates a new {@code EditPaymentCommand} object.
+ */
 public class EditPaymentCommandParser implements Parser<EditPaymentCommand> {
 
     @Override
     public EditPaymentCommand parse(String args) throws ParseException {
         ArgumentMultimap map = ArgumentTokenizer.tokenize(
-                args, PREFIX_PAYMENT_INDEX, PREFIX_PAYMENT_AMOUNT, PREFIX_PAYMENT_DATE, PREFIX_PAYMENT_REMARKS);
+            args, PREFIX_PAYMENT_INDEX, PREFIX_PAYMENT_AMOUNT, PREFIX_PAYMENT_DATE, PREFIX_PAYMENT_REMARKS);
 
         Index personIndex;
         try {
@@ -54,10 +57,12 @@ public class EditPaymentCommandParser implements Parser<EditPaymentCommand> {
 
     private static int parseRequiredPaymentIndex(ArgumentMultimap map) throws ParseException {
         String raw = map.getValue(PREFIX_PAYMENT_INDEX)
-                .orElseThrow(() -> new ParseException("Missing required prefix p/ for payment index"));
+            .orElseThrow(() -> new ParseException("Missing required prefix p/ for payment index"));
         try {
             int oneBased = Integer.parseInt(raw.trim());
-            if (oneBased <= 0) throw new NumberFormatException();
+            if (oneBased <= 0) {
+                throw new NumberFormatException();
+            }
             return oneBased;
         } catch (NumberFormatException e) {
             throw new ParseException("Payment index after p/ must be a positive integer (e.g. p/1)");

@@ -11,20 +11,26 @@ import java.util.Objects;
 public final class Payment {
     private final Amount amount;
     private final LocalDate date;
-    private final String remarks;          // may be null
+    private final String remarks;
     private final LocalDateTime recordedAt;
 
-    /** Create a payment with no remarks. recordedAt defaults to now. */
+    /**
+     * Create a payment with no remarks. recordedAt defaults to now.
+     */
     public Payment(Amount amount, LocalDate date) {
         this(amount, date, null, LocalDateTime.now());
     }
 
-    /** Create a payment with remarks. recordedAt defaults to now. */
+    /**
+     * Create a payment with remarks. recordedAt defaults to now.
+     */
     public Payment(Amount amount, LocalDate date, String remarks) {
         this(amount, date, remarks, LocalDateTime.now());
     }
 
-    /** Full constructor with explicit recordedAt. */
+    /**
+     * Full constructor with explicit recordedAt.
+     */
     public Payment(Amount amount, LocalDate date, String remarks, LocalDateTime recordedAt) {
         this.amount = Objects.requireNonNull(amount, "amount");
         this.date = Objects.requireNonNull(date, "date");
@@ -48,7 +54,9 @@ public final class Payment {
         return recordedAt;
     }
 
-    /** String view such as "2025-03-12 | 23.50 | taxi home". */
+    /**
+     * String view such as "2025-03-12 | 23.50 | taxi home".
+     */
     @Override
     public String toString() {
         String r = (remarks == null || remarks.isEmpty()) ? "" : (" | " + remarks);
@@ -57,15 +65,19 @@ public final class Payment {
 
     @Override
     public boolean equals(Object o) {
-        if (o == this) return true;
-        if (!(o instanceof Payment)) return false;
+        if (o == this) {
+            return true;
+        }
+        if (!(o instanceof Payment)) {
+            return false;
+        }
         Payment p = (Payment) o;
         boolean sameRemarks = (this.remarks == null && p.remarks == null)
-                || (this.remarks != null && this.remarks.equals(p.remarks));
+            || (this.remarks != null && this.remarks.equals(p.remarks));
         return this.amount.equals(p.amount)
-                && this.date.equals(p.date)
-                && sameRemarks
-                && this.recordedAt.equals(p.recordedAt);
+            && this.date.equals(p.date)
+            && sameRemarks
+            && this.recordedAt.equals(p.recordedAt);
     }
 
     @Override
@@ -81,7 +93,9 @@ public final class Payment {
     // ---------- helpers ----------
 
     private static String tidy(String s) {
-        if (s == null) return null;
+        if (s == null) {
+            return null;
+        }
         String t = s.trim();
         return t.isEmpty() ? null : t;
     }

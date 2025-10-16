@@ -23,23 +23,28 @@ public class UnarchiveCommand extends Command {
     public static final String COMMAND_WORD = "unarchive";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD
-            + ": Unarchives one or more persons identified by their indexes in the displayed person list.\n"
-            + "Parameters: INDEX[,INDEX]... (each must be a positive integer)\n"
-            + "Example (single): " + COMMAND_WORD + " 1\n"
-            + "Example (multiple): " + COMMAND_WORD + " 1,2,5";
+        + ": Unarchives one or more persons identified by their indexes in the displayed person list.\n"
+        + "Parameters: INDEX[,INDEX]... (each must be a positive integer)\n"
+        + "Example (single): " + COMMAND_WORD + " 1\n"
+        + "Example (multiple): " + COMMAND_WORD + " 1,2,5";
 
     public static final String MESSAGE_NOT_ARCHIVED = "One or more selected persons are not archived: %s";
     public static final String MESSAGE_SUCCESS = "Unarchived: %s";
 
     private final List<Index> targetIndexes;
 
+    /**
+     * Creates an {@code UnarchiveCommand} to unarchive the specified persons.
+     *
+     * @param targetIndexes the list of person indexes to unarchive.
+     */
     public UnarchiveCommand(List<Index> targetIndexes) {
         requireNonNull(targetIndexes);
         // remove duplicates while preserving user input order
         Set<Integer> seenIndexes = new LinkedHashSet<>();
         this.targetIndexes = targetIndexes.stream()
-                .filter(index -> seenIndexes.add(index.getZeroBased()))
-                .collect(Collectors.toUnmodifiableList());
+            .filter(index -> seenIndexes.add(index.getZeroBased()))
+            .collect(Collectors.toUnmodifiableList());
     }
 
     @Override
@@ -66,7 +71,7 @@ public class UnarchiveCommand extends Command {
 
         if (!notArchivedNames.isEmpty()) {
             throw new CommandException(String.format(MESSAGE_NOT_ARCHIVED,
-                    String.join(", ", notArchivedNames)));
+                String.join(", ", notArchivedNames)));
         }
 
         // apply updates
@@ -84,8 +89,12 @@ public class UnarchiveCommand extends Command {
 
     @Override
     public boolean equals(Object other) {
-        if (other == this) return true;
-        if (!(other instanceof UnarchiveCommand)) return false;
+        if (other == this) {
+            return true;
+        }
+        if (!(other instanceof UnarchiveCommand)) {
+            return false;
+        }
         UnarchiveCommand otherCommand = (UnarchiveCommand) other;
         return targetIndexes.equals(otherCommand.targetIndexes);
     }
