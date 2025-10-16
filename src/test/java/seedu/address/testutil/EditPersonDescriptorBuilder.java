@@ -4,9 +4,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import seedu.address.logic.commands.EditMemberCommand.EditPersonDescriptor;
+import seedu.address.logic.commands.EditCommand.EditPersonDescriptor;
+import seedu.address.model.person.Address;
 import seedu.address.model.person.Email;
-import seedu.address.model.person.MatriculationNumber;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.Phone;
@@ -17,7 +17,7 @@ import seedu.address.model.tag.Tag;
  */
 public class EditPersonDescriptorBuilder {
 
-    private final EditPersonDescriptor descriptor;
+    private EditPersonDescriptor descriptor;
 
     public EditPersonDescriptorBuilder() {
         descriptor = new EditPersonDescriptor();
@@ -28,14 +28,14 @@ public class EditPersonDescriptorBuilder {
     }
 
     /**
-     * Returns an {@code EditPersonDescriptor} with fields containing {@code person}'s details.
+     * Returns an {@code EditPersonDescriptor} with fields containing {@code person}'s details
      */
     public EditPersonDescriptorBuilder(Person person) {
         descriptor = new EditPersonDescriptor();
         descriptor.setName(person.getName());
         descriptor.setPhone(person.getPhone());
         descriptor.setEmail(person.getEmail());
-        descriptor.setMatriculationNumber(person.getMatriculationNumber());
+        descriptor.setAddress(person.getAddress());
         descriptor.setTags(person.getTags());
     }
 
@@ -64,10 +64,10 @@ public class EditPersonDescriptorBuilder {
     }
 
     /**
-     * Sets the {@code MatriculationNumber} of the {@code EditPersonDescriptor} that we are building.
+     * Sets the {@code Address} of the {@code EditPersonDescriptor} that we are building.
      */
-    public EditPersonDescriptorBuilder withMatriculationNumber(String matriculationNumber) {
-        descriptor.setMatriculationNumber(new MatriculationNumber(matriculationNumber));
+    public EditPersonDescriptorBuilder withAddress(String address) {
+        descriptor.setAddress(new Address(address));
         return this;
     }
 

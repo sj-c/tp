@@ -28,17 +28,20 @@ public class Person {
     private final MatriculationNumber matriculationNumber;
     private final Set<Tag> tags = new HashSet<>();
     private final List<Payment> payments;
+    private final boolean archived;
 
     /**
      * Minimal constructor (AB3 default fields). Starts with no payments.
      */
-    public Person(Name name, Phone phone, Email email, MatriculationNumber matriculationNumber, Set<Tag> tags) {
+    public Person(Name name, Phone phone, Email email, MatriculationNumber matriculationNumber,
+                  Set<Tag> tags) {
         requireAllNonNull(name, phone, email, matriculationNumber, tags);
         this.name = name;
         this.phone = phone;
         this.email = email;
         this.matriculationNumber = matriculationNumber;
         this.tags.addAll(tags);
+        this.archived = false;
         this.payments = Collections.unmodifiableList(new ArrayList<>()); // empty immutable list
     }
 
@@ -46,13 +49,14 @@ public class Person {
      * Full constructor including payments.
      */
     public Person(Name name, Phone phone, Email email, MatriculationNumber matriculationNumber,
-                  Set<Tag> tags, List<Payment> payments) {
+                  Set<Tag> tags, boolean archived, List<Payment> payments) {
         requireAllNonNull(name, phone, email, matriculationNumber, tags, payments);
         this.name = name;
         this.phone = phone;
         this.email = email;
         this.matriculationNumber = matriculationNumber;
         this.tags.addAll(tags);
+        this.archived = archived;
         this.payments = Collections.unmodifiableList(new ArrayList<>(payments));
     }
 
@@ -68,10 +72,6 @@ public class Person {
         return email;
     }
 
-    public MatriculationNumber getMatriculationNumber() {
-        return matriculationNumber;
-    }
-
     /**
      * Returns an immutable tag set, which throws {@code UnsupportedOperationException}
      * if modification is attempted.
@@ -80,14 +80,26 @@ public class Person {
         return Collections.unmodifiableSet(tags);
     }
 
-    /** Returns an immutable view of the payments list. */
+    public boolean isArchived() {
+        return archived;
+    }
+
+    /**
+     * NEW: copy-with for archived flag
+     */
+    public Person withArchived(boolean newArchived) {
+        return new Person(name, phone, email, matriculationNumber, tags, newArchived, payments);
+    }
+
+    /**
+     * Returns an immutable view of the payments list.
+     */
     public List<Payment> getPayments() {
         return payments;
     }
 
-    /** Returns size of payments list. */
-    public int getPaymentsSize() {
-        return payments.size();
+    public MatriculationNumber getMatriculationNumber() {
+        return matriculationNumber;
     }
 
     /**
@@ -97,7 +109,26 @@ public class Person {
     public Person withAddedPayment(Payment payment) {
         List<Payment> updated = new ArrayList<>(this.payments);
         updated.add(payment);
-        return new Person(name, phone, email, matriculationNumber, tags, updated);
+        return new Person(name, phone, email, matriculationNumber, tags, archived, updated);
+    }
+
+    /**
+     * Returns a new Person that is identical to this person but with the given payment removed.
+     * If the payment does not exist, this person is returned unchanged.
+     */
+    public Person withRemovedPayment(Payment paymentToRemove) {
+        List<Payment> updated = new ArrayList<>(this.payments);
+        updated.remove(paymentToRemove);
+        return new Person(name, phone, email, matriculationNumber, tags, archived, updated);
+    }
+
+    /**
+     * Returns a new Person with the payment at {@code zeroBasedPaymentIndex} replaced by {@code edited}.
+     */
+    public Person withEditedPayment(int zeroBasedPaymentIndex, Payment edited) {
+        List<Payment> updated = new ArrayList<>(this.payments);
+        updated.set(zeroBasedPaymentIndex, edited);
+        return new Person(name, phone, email, matriculationNumber, tags, archived, updated);
     }
 
     /**
@@ -116,7 +147,6 @@ public class Person {
         return otherPerson.getMatriculationNumber().equals(getMatriculationNumber());
     }
 
-
     /**
      * Returns true if both persons have the same identity and data fields.
      * (Note: payments are intentionally not part of equality to preserve AB3 semantics.)
@@ -126,17 +156,16 @@ public class Person {
         if (other == this) {
             return true;
         }
-
         if (!(other instanceof Person)) {
             return false;
         }
-
-        Person otherPerson = (Person) other;
-        return name.equals(otherPerson.name)
-                && phone.equals(otherPerson.phone)
-                && email.equals(otherPerson.email)
-                && matriculationNumber.equals(otherPerson.matriculationNumber)
-                && tags.equals(otherPerson.tags);
+        Person o = (Person) other;
+        return name.equals(o.name)
+            && phone.equals(o.phone)
+            && email.equals(o.email)
+            && matriculationNumber.equals(o.matriculationNumber)
+            && tags.equals(o.tags)
+            && archived == o.archived;
     }
 
     @Override
@@ -147,12 +176,13 @@ public class Person {
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .add("name", name)
-                .add("phone", phone)
-                .add("email", email)
-                .add("matriculationNumber", matriculationNumber)
-                .add("tags", tags)
-                .add("paymentsCount", payments.size())
-                .toString();
+            .add("name", name)
+            .add("phone", phone)
+            .add("email", email)
+            .add("matriculationNumber", matriculationNumber)
+            .add("tags", tags)
+            .add("archived", archived)
+            .add("paymentsCount", payments.size())
+            .toString();
     }
 }

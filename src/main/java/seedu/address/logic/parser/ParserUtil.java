@@ -2,8 +2,10 @@ package seedu.address.logic.parser;
 
 import static java.util.Objects.requireNonNull;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import seedu.address.commons.core.index.Index;
@@ -123,4 +125,29 @@ public class ParserUtil {
         }
         return tagSet;
     }
+
+    /**
+     * Parses a comma-separated list of one-based indexes (e.g. "1", "1,2, 5").
+     * Trims whitespace around each index. Throws ParseException if any index is invalid
+     * or if the input is empty/blank.
+     */
+    public static List<Index> parseIndexes(String indexes) throws ParseException {
+        requireNonNull(indexes);
+        String trimmed = indexes.trim();
+        if (trimmed.isEmpty()) {
+            throw new ParseException("No indexes provided.");
+        }
+
+        String[] parts = trimmed.split(",");
+        List<Index> parsed = new ArrayList<>();
+        for (String part : parts) {
+            String p = part.trim();
+            if (p.isEmpty()) {
+                throw new ParseException("Empty index in list.");
+            }
+            parsed.add(parseIndex(p)); // reuse the existing parseIndex(String)
+        }
+        return parsed;
+    }
+
 }

@@ -8,15 +8,8 @@ import seedu.address.logic.parser.exceptions.ParseException;
 
 /**
  * Parses input arguments and creates a new {@code ViewPaymentsCommand} object.
- *
- * This parser supports two types of arguments:
- * <ul>
- *     <li><b>"all"</b> — to view all payments across all persons.</li>
- *     <li><b>INDEX</b> — to view payments for the person at the given index in the displayed list.</li>
- * </ul>
  */
 public class ViewPaymentsCommandParser implements Parser<ViewPaymentsCommand> {
-
     @Override
     public ViewPaymentsCommand parse(String args) throws ParseException {
         String s = args.trim();
@@ -28,7 +21,7 @@ public class ViewPaymentsCommandParser implements Parser<ViewPaymentsCommand> {
             return ViewPaymentsCommand.forIndex(index);
         } catch (ParseException pe) {
             throw new ParseException(
-                    String.format(MESSAGE_INVALID_COMMAND_FORMAT, ViewPaymentsCommand.MESSAGE_USAGE), pe);
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, ViewPaymentsCommand.MESSAGE_USAGE), pe);
         }
     }
 }

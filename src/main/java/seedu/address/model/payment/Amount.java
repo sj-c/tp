@@ -7,13 +7,13 @@ import java.util.Objects;
 /**
  * Immutable value object representing a monetary amount.
  * Rules:
- *  - strictly positive
- *  - at most 2 decimal places
- *  - stored at fixed scale of 2 without rounding
+ * - strictly positive
+ * - at most 2 decimal places
+ * - stored at fixed scale of 2 without rounding
  */
 public final class Amount implements Comparable<Amount> {
     public static final String MESSAGE_CONSTRAINTS =
-            "Invalid amount (must be positive, up to 2 decimal places).";
+        "Invalid amount (must be positive, up to 2 decimal places).";
     public static final int SCALE = 2;
 
     private final BigDecimal value;
@@ -22,7 +22,9 @@ public final class Amount implements Comparable<Amount> {
         this.value = normalize(value);
     }
 
-    /** Parse from a string such as "12.34". */
+    /**
+     * Parse from a string such as "12.34".
+     */
     public static Amount parse(String raw) {
         if (raw == null) {
             throw new NullPointerException("raw");
@@ -35,7 +37,9 @@ public final class Amount implements Comparable<Amount> {
         }
     }
 
-    /** Internal BigDecimal at scale 2. */
+    /**
+     * Internal BigDecimal at scale 2.
+     */
     public BigDecimal asBigDecimal() {
         return value;
     }

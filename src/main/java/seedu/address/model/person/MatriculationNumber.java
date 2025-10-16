@@ -1,6 +1,5 @@
 package seedu.address.model.person;
 
-
 import static java.util.Objects.requireNonNull;
 
 import seedu.address.model.person.exceptions.InvalidMatriculationNumberException;
@@ -12,9 +11,9 @@ import seedu.address.model.person.exceptions.InvalidMatriculationNumberException
 public class MatriculationNumber {
 
     public static final String MESSAGE_CONSTRAINTS =
-            "Matriculation numbers must be exactly 10 characters long, "
-                    + "start with 'A', end with an alphabet, "
-                    + "and contain digits in between (e.g. A01234567X).";
+        "Matriculation numbers must be exactly 10 characters long, "
+            + "start with 'A', end with an alphabet, "
+            + "and contain digits in between (e.g. A01234567X).";
 
     /**
      * Format:

@@ -43,9 +43,9 @@
 # Add member
 # Adds a new member. On success, Treasura prints a single-line confirmation with all stored fields,
 # including an auto-assigned ID.
-member add n/NAME p/PHONE [e/EMAIL] [dob/YYYY-MM-DD] [matric/YEAR] [r/ROLE] [t/TAG]... [note/NOTE]
+member add n/NAME p/PHONE [e/EMAIL] [m/MATRICULATION NUMBER] [t/TAG]
 # Example:
-member add n/Chia Sin Jie p/91234567 e/sj@nus.edu.sg dob/2005-04-18 matric/2024 r/treasurer t/dance t/year1 note/Prefers PayNow
+member add n/Chia Sin Jie p/91234567 e/sj@nus.edu.sg m/A00000000X t/year1 
 
 # Find member (by ID or name)
 # Displays the full profile. Duplicate names prompt for disambiguation.

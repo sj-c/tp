@@ -28,16 +28,21 @@ class JsonAdaptedPerson {
     private final String name;
     private final String phone;
     private final String email;
-    private final String matriculationNumber; // ✅ lowercase field name
+    private final String matriculationNumber;
     private final List<JsonAdaptedTag> tags = new ArrayList<>();
+    private final Boolean archived;
     private final List<JsonAdaptedPayment> payments = new ArrayList<>();
 
+    /**
+     * Constructs a {@code JsonAdaptedPerson} with the given person details.
+     */
     @JsonCreator
     public JsonAdaptedPerson(@JsonProperty("name") String name,
                              @JsonProperty("phone") String phone,
                              @JsonProperty("email") String email,
-                             @JsonProperty("matriculationNumber") String matriculationNumber,
+                             @JsonProperty("matriculation number") String matriculationNumber,
                              @JsonProperty("tags") List<JsonAdaptedTag> tags,
+                             @JsonProperty("archived") Boolean archived,
                              @JsonProperty("payments") List<JsonAdaptedPayment> payments) {
         this.name = name;
         this.phone = phone;
@@ -46,24 +51,36 @@ class JsonAdaptedPerson {
         if (tags != null) {
             this.tags.addAll(tags);
         }
+        this.archived = (archived == null) ? Boolean.FALSE : archived;
         if (payments != null) {
             this.payments.addAll(payments);
         }
     }
 
+
+    /**
+     * Converts a given {@code Person} into this class for Jackson use.
+     */
     public JsonAdaptedPerson(Person source) {
         name = source.getName().fullName;
         phone = source.getPhone().value;
         email = source.getEmail().value;
-        matriculationNumber = source.getMatriculationNumber().value; // ✅ lowercase
+        matriculationNumber = source.getMatriculationNumber().value;
         tags.addAll(source.getTags().stream()
-                .map(JsonAdaptedTag::new)
-                .collect(Collectors.toList()));
+            .map(JsonAdaptedTag::new)
+            .collect(Collectors.toList()));
+        this.archived = source.isArchived();
         source.getPayments().stream()
-                .map(JsonAdaptedPayment::new)
-                .forEach(this.payments::add);
+            .map(JsonAdaptedPayment::new)
+            .forEach(this.payments::add);
+
     }
 
+    /**
+     * Converts this Jackson-friendly adapted person object into the model's {@code Person} object.
+     *
+     * @throws IllegalValueException if there were any data constraints violated in the adapted person.
+     */
     public Person toModelType() throws IllegalValueException {
         final List<Tag> personTags = new ArrayList<>();
         for (JsonAdaptedTag tag : tags) {
@@ -72,7 +89,7 @@ class JsonAdaptedPerson {
 
         if (name == null) {
             throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT,
-                    Name.class.getSimpleName()));
+                Name.class.getSimpleName()));
         }
         if (!Name.isValidName(name)) {
             throw new IllegalValueException(Name.MESSAGE_CONSTRAINTS);
@@ -81,7 +98,7 @@ class JsonAdaptedPerson {
 
         if (phone == null) {
             throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT,
-                    Phone.class.getSimpleName()));
+                Phone.class.getSimpleName()));
         }
         if (!Phone.isValidPhone(phone)) {
             throw new IllegalValueException(Phone.MESSAGE_CONSTRAINTS);
@@ -90,7 +107,7 @@ class JsonAdaptedPerson {
 
         if (email == null) {
             throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT,
-                    Email.class.getSimpleName()));
+                Email.class.getSimpleName()));
         }
         if (!Email.isValidEmail(email)) {
             throw new IllegalValueException(Email.MESSAGE_CONSTRAINTS);
@@ -98,22 +115,28 @@ class JsonAdaptedPerson {
         final Email modelEmail = new Email(email);
 
         if (matriculationNumber == null) {
-            throw new IllegalValueException(String.format(
-                    MISSING_FIELD_MESSAGE_FORMAT, MatriculationNumber.class.getSimpleName()));
+            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT,
+                MatriculationNumber.class.getSimpleName()));
         }
-        if (!MatriculationNumber.isValidMatriculationNumber(matriculationNumber)) { // ✅ reference class name
+        if (!MatriculationNumber.isValidMatriculationNumber(matriculationNumber)) {
             throw new IllegalValueException(MatriculationNumber.MESSAGE_CONSTRAINTS);
         }
-        final MatriculationNumber modelMatriculationNumber = new MatriculationNumber(matriculationNumber);
+        final MatriculationNumber modelmatriculationNumber = new MatriculationNumber(matriculationNumber);
 
         final Set<Tag> modelTags = new HashSet<>(personTags);
 
+        final boolean modelArchived = this.archived != null && this.archived;
+
+        // Build payments list
         final List<Payment> modelPayments = new ArrayList<>();
         for (JsonAdaptedPayment jap : payments) {
             modelPayments.add(jap.toModelType());
         }
 
-        return new Person(modelName, modelPhone, modelEmail, modelMatriculationNumber, modelTags,
-                modelPayments);
+        // Use the constructor that accepts payments
+        return new Person(modelName, modelPhone, modelEmail, modelmatriculationNumber, modelTags,
+            modelArchived, modelPayments);
+
     }
+
 }
