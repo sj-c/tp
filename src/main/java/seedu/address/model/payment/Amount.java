@@ -52,8 +52,12 @@ public final class Amount implements Comparable<Amount> {
 
     @Override
     public boolean equals(Object o) {
-        if (o == this) return true;
-        if (!(o instanceof Amount)) return false;
+        if (o == this) {
+            return true;
+        }
+        if (!(o instanceof Amount)) {
+            return false;
+        }
         Amount other = (Amount) o;
         return value.equals(other.value);
     }

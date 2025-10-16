@@ -8,9 +8,9 @@ import java.time.LocalDate;
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
-import seedu.address.model.person.Person;
 import seedu.address.model.payment.Amount;
 import seedu.address.model.payment.Payment;
+import seedu.address.model.person.Person;
 
 /**
  * Adds a payment to a person identified by the index number in the displayed list.
@@ -27,6 +27,15 @@ public class AddPaymentCommand extends Command {
     private final Index index;
     private final Payment payment;
 
+    /**
+     * Creates an {@code AddPaymentCommand} to add the specified {@code Payment}
+     * to the {@code Person} at the given {@code Index}.
+     *
+     * @param index   The index of the person in the filtered list.
+     * @param amount  The amount of the payment.
+     * @param date    The date of the payment.
+     * @param remarks Optional remarks for the payment.
+     */
     public AddPaymentCommand(Index index, Amount amount, LocalDate date, String remarks) {
         this.index = index;
         this.payment = new Payment(amount, date, remarks);

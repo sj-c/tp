@@ -12,8 +12,8 @@ import java.util.stream.Collectors;
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
-import seedu.address.model.person.Person;
 import seedu.address.model.payment.Payment;
+import seedu.address.model.person.Person;
 
 /**
  * Shows payments for one person by index, or for everyone if 'all' is used.
@@ -90,8 +90,8 @@ public class ViewPaymentsCommand extends Command {
         String list = sorted.stream()
                 .map(p -> String.format("- %s | %s%s",
                         DATE_FMT.format(p.getDate()),
-                        p.getAmount().toString(),
-                        (p.getRemarks() == null || p.getRemarks().isEmpty()) ? "" : (" | " + p.getRemarks())))
+                        p.getAmount().toString(), (
+                                p.getRemarks() == null || p.getRemarks().isEmpty()) ? "" : (" | " + p.getRemarks())))
                 .collect(Collectors.joining("\n"));
 
         String header = String.format("Payments for %s (%d). Total: %s",
